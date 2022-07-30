@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^9.0.2",
     "NeteaseCloudMusicApi": "^4.6.7",
     "vue": "^3.2.37",
     "vue-router": "4"

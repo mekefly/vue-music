@@ -12,7 +12,7 @@ import { useRoute } from "vue-router";
 import { getSongDetail, getSongUrlById } from "../../api";
 import PlayButton from "../../components/PlayButton.vue";
 import Lyric from "../../components/Lyric.vue";
-import usePlayState, { useFullScreen } from "./playState";
+import usePlayState, { useFullScreen, next } from "./playState";
 
 const {
   currentTime,
@@ -29,11 +29,12 @@ const {
 const fullScreen = useFullScreen();
 
 //歌曲详情data
-const songDetailData: Ref<any> = shallowRef({});
+const songDetailData: Ref<any> = shallowRef(null);
 
 //urldata
 const songUrlData: Ref<any> = shallowRef(null);
 watchEffect(() => {
+  songDetailData.value = null;
   if (!idOfPlaying.value) {
     return;
   }
@@ -51,6 +52,8 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
+  songUrlData.value = null;
+
   if (!idOfPlaying.value) {
     return;
   }
@@ -63,6 +66,9 @@ watchEffect(() => {
 
 //音乐url
 const url = computed(() => {
+  if (!idOfPlaying.value || !songUrlData.value) {
+    return "";
+  }
   return songUrlData.value?.data?.[0]?.url ?? "";
 });
 
@@ -86,7 +92,6 @@ function updateAudio() {
     return;
   }
   if (url.value === "") {
-    //url还没赋代表某些错误，比如没权限
     return;
   }
 
@@ -160,7 +165,6 @@ function durationchangeHandel() {
         class="fa-solid fa-angle-left"
         @click="
           () => {
-            // $router.back();
             fullScreen = false;
           }
         "
@@ -196,6 +200,7 @@ function durationchangeHandel() {
       @ended="
         () => {
           isPlay = false;
+          next();
         }
       "
     ></audio>

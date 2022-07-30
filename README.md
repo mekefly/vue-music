@@ -1,8 +1,32 @@
-# Vue 3 + TypeScript + Vite
+# vue-music of Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This project is a music project of Netease cloud music API. Please do not use it for any illegal purposes
 
-## Recommended IDE Setup
+该项目是网易云音乐api的一个音乐工程，请不要用于任何非法用途
+
+## Quick start | 快速开始
+
+## Clone | 克隆
+
+> git@github.com:mekefly/vue-music.git
+
+## Enter folder | 进入目录
+
+> cd vue-music
+
+## install | 安装
+
+> pnpm install
+or
+> npm install
+or
+> yarn
+
+## run | 运行
+
+> npm start
+
+## Recommended IDE Setup | 推荐的编辑器和设置
 
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 

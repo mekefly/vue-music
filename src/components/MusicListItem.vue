@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { play } from "../views/PlayBar/playState";
+import Vip from "./Vip.vue";
 
 defineProps<{
   track: any;
@@ -23,6 +24,7 @@ defineProps<{
     </div>
     <div class="right">
       <h4 class="name">
+        <Vip v-if="track.fee === 1"></Vip>
         {{ track.name }}
         <span class="tns" v-if="!!track.tns">
           ({{ track.tns.join(",") }})
@@ -39,6 +41,9 @@ defineProps<{
 <style scoped lang="scss">
 .item {
   display: flex;
+  &:active {
+    background-color: #ddd;
+  }
   .left {
     display: flex;
     align-items: center;
@@ -57,12 +62,15 @@ defineProps<{
     box-sizing: border-box;
 
     border-bottom: 1px solid #ddd;
-    .name {
+    > .name {
+      display: flex;
+      align-items: center;
       .tns {
         color: #555;
       }
     }
     .author {
+      display: flex;
       color: #555;
     }
   }

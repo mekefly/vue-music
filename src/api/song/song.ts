@@ -1,5 +1,6 @@
-import { require } from "../utils";
-import { Lyric } from "./types";
+import { require } from "../../utils";
+import { Lyric } from "./lyricType";
+import { SongDetailType } from "./SongDetailType";
 
 /**
  * 获取音乐 url
@@ -17,7 +18,16 @@ export async function getSongUrlById(query: {
   id: number | string;
   br?: number | string;
 }) {
-  return await require({ url: "/song/url", query, useCache: true });
+  return await require({
+    url: "/song/url",
+    query,
+    useCache: true,
+    useAsyncMerge: true,
+  });
+}
+export async function getSong(id: number | string | undefined | null) {
+  if (!id) return;
+  return (await getSongDetail(id))?.songs?.[0];
 }
 
 /**
@@ -30,7 +40,7 @@ export async function getSongUrlById(query: {
  */
 export async function getSongDetail(
   ids: Array<string | number> | string | number
-) {
+): Promise<SongDetailType> {
   const data = await require({
     url: "/song/detail",
     query: {
@@ -40,6 +50,7 @@ export async function getSongDetail(
           : ids.join(","),
     },
     useCache: true,
+    useAsyncMerge: true,
   });
 
   return data;
@@ -48,7 +59,12 @@ export async function getSongDetail(
 export async function getLyricById(query: {
   id: number | string;
 }): Promise<Lyric> {
-  const data = await require({ url: "/lyric", query, useCache: true });
+  const data = await require({
+    url: "/lyric",
+    query,
+    useCache: true,
+    useAsyncMerge: true,
+  });
 
   return data;
 }

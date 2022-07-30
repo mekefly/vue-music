@@ -23,13 +23,23 @@ export async function useAsyncLocalStorageCache<E>(
   }
 }
 
-async function asyncReCache(key: string, genValue: any, duration?: number) {
-  const value = await genValue();
-
-  const localStorageCache = createLocalStorageCache(value, duration);
-  cacheDate[key] = localStorageCache;
-  localStorage.setItem(key, JSON.stringify(localStorageCache));
-  return value;
+function asyncReCache(
+  key: string,
+  genValue: any,
+  duration?: number
+): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
+    genValue()
+      .then((value: any) => {
+        const localStorageCache = createLocalStorageCache(value, duration);
+        cacheDate[key] = localStorageCache;
+        localStorage.setItem(key, JSON.stringify(localStorageCache));
+        resolve(value);
+      })
+      .catch((err: any) => {
+        reject(err);
+      });
+  });
 }
 export function useLocalStorageCache<E>(key: string, genValue: () => E): E {
   const value = cacheDate[key];

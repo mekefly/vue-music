@@ -11,6 +11,7 @@ const props = defineProps<{
 /** 歌词请求得到的数据存放点 */
 const LyricData: Ref<Lyric | null> = ref(null);
 watchEffect(() => {
+  LyricData.value = null;
   if (!props.id) {
     return;
   }
@@ -91,6 +92,7 @@ watch(activeIndex, () => {
 <template>
   <div class="lyric">
     <p
+      class="item"
       v-for="(lrc, index) in lyricList"
       :class="{ active: activeIndex === index }"
       :ref="(el) => (lrc.dom = el as any)"
@@ -111,15 +113,17 @@ watch(activeIndex, () => {
   &::-webkit-scrollbar {
     width: 0px;
   }
-  p {
+  .item {
     transition: 1s;
-    transition-property: transform, font-size, font-weight, color;
+    transition-property: transform, font-size, font-weight, color, text-shadow;
+    padding: 0 3rem;
+    box-sizing: border-box;
 
     &.active {
-      transform: scale(1.5);
+      transform: scale(1.1);
 
-      font-weight: bold;
       color: red;
+      text-shadow: 0 0 3px red;
     }
   }
 }

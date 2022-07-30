@@ -1,4 +1,4 @@
-import { Ref, ref, UnwrapRef, watch } from "vue";
+import { Ref, ref, UnwrapRef, watch, watchEffect } from "vue";
 
 export function defineGlobalSync<E>(value: E): () => Ref<UnwrapRef<E>> {
   const refValue = ref(value);
@@ -21,7 +21,7 @@ export function useLocalStorage<E>(key: string, defaul?: E): Ref<E> {
   }
   const r = ref(v);
 
-  watch(r, () => {
+  watchEffect(() => {
     localStorage.setItem(key, JSON.stringify(r.value));
   });
   return r;

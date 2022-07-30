@@ -5,15 +5,28 @@ import usePlayState, { useIdOfPlaying, useIsPlay } from "./playState";
 import { useFullScreen } from "./playState";
 import Player from "./Player.vue";
 import MusicList from "../../components/MusicList.vue";
+import PlayList from "./PlayList.vue";
+import LoadingBlock from "../../components/LoadingBlock.vue";
 
-const { currentTime, duration, isPlay, idOfPlaying, songName, coverUrl } =
-  usePlayState();
+const {
+  currentTime,
+  duration,
+  isPlay,
+  idOfPlaying,
+  songName,
+  coverUrl,
+  playListHide,
+} = usePlayState();
 const fullScreen = useFullScreen();
 </script>
 
 <template>
   <div class="app" :class="{ 'full-screen': fullScreen }">
-    <RouterView></RouterView>
+    <RouterView v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </RouterView>
   </div>
   <Player></Player>
   <div class="play-bar" :class="{ 'transparent-background': fullScreen }">
@@ -27,10 +40,9 @@ const fullScreen = useFullScreen();
     ></i>
 
     <PlayButton class="play-btn btn block" v-model:value="isPlay"></PlayButton>
-    <div
-      class="cover block"
-      :style="{ backgroundImage: `url(${coverUrl})` }"
-    ></div>
+    <div class="cover block" :style="{ backgroundImage: `url(${coverUrl})` }">
+      <LoadingBlock v-if="!coverUrl || coverUrl === ''"></LoadingBlock>
+    </div>
     <div class="content">
       <p>{{ songName }}</p>
       <input
@@ -44,11 +56,23 @@ const fullScreen = useFullScreen();
       }"
       />
     </div>
+    <i
+      class="fa-brands fa-playstation btn"
+      @click="
+        () => {
+          playListHide = !playListHide;
+        }
+      "
+    ></i>
   </div>
+  <PlayList></PlayList>
 </template>
 
 <style scoped lang="scss">
 .app {
+  display: flex;
+  flex-direction: column;
+
   height: 100vh;
   width: 100vw;
   &.full-screen {
