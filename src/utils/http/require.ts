@@ -3,70 +3,123 @@ import { asyncMerge } from "../async";
 import { useAsyncLocalStorageCache } from "../cache";
 
 const baseUrl = `http://localhost:3000`;
-let count = 0;
-export const require = async function ({
+/**
+ * 请求
+ * @export
+ * @param {({
+ *   url: string;
+ *   query?: { [key: string]: string | number };
+ *   useClash?: boolean;
+ *   cacheDuration?: number;
+ *   useAsyncMerge?: boolean;
+ * })} {
+ *   url,
+ *   query,
+ *   useClash,
+ *   cacheDuration,
+ *   useAsyncMerge,
+ * }
+ * @return {*}
+ */
+export async function require({
   url,
   query,
-  useClash: isClash,
+  useCache,
   cacheDuration,
   useAsyncMerge,
 }: {
   url: string;
   query?: { [key: string]: string | number };
-  useClash?: boolean;
+  useCache?: boolean;
   cacheDuration?: number;
   useAsyncMerge?: boolean;
 }) {
   const fullUrl = `${baseUrl}${url}${queryToString(query)}`;
-  const f = async () => {
-    // 是否启动缓存
-    if (isClash) {
-      return await useAsyncLocalStorageCache(
-        fullUrl,
-        async () => {
-          const response = await fetch(fullUrl).catch((e) => {
-            console.log(e);
-            alert(e);
-          });
-
-          const data = await errorInterception(await response.json());
-          return data;
-        },
-        cacheDuration
-      );
-    }
-    return await (await fetch(fullUrl)).json();
-  };
-
   //同一连接请求合并
   if (useAsyncMerge) {
-    const data = await asyncMerge(fullUrl, f);
-    return data;
+    return await asyncMerge(
+      fullUrl,
+      prepareCacheRequest,
+      fullUrl,
+      useCache,
+      cacheDuration
+    );
   } else {
-    return await f();
+    return await prepareCacheRequest(fullUrl, useCache, cacheDuration);
   }
-} as any;
+}
+/**
+ * 准备缓存请求
+ *
+ * @param {string} fullUrl
+ * @param {boolean} [useClash]
+ * @param {number} [cacheDuration]
+ * @return {*}
+ */
+function prepareCacheRequest(
+  fullUrl: string,
+  useClash?: boolean,
+  cacheDuration?: number
+) {
+  // 是否启动缓存
+  if (useClash) {
+    return useAsyncLocalStorageCache(
+      fullUrl,
+      toRequest,
+      cacheDuration,
+      fullUrl
+    );
+  }
+  return toRequest(fullUrl);
+}
+/**
+ * 去请求
+ *
+ * @param {string} fullUrl
+ * @return {*}
+ */
+function toRequest(fullUrl: string) {
+  // return type Promise
+  return fetch(fullUrl)
+    .then(
+      (response) => {
+        //获取json错误
+        return response.json();
+      },
+      (e) => {
+        console.log(e);
+        alert("网络错误");
+        return Promise.reject(e);
+      }
+    )
+    .then((data) => {
+      /** 全局错误处理 */
+      return errorInterception(data);
+    });
+}
+
+/**
+ * 错误拦截
+ *
+ * @param {*} data
+ * @return {*}
+ */
 function errorInterception(data: any) {
   return new Promise<any>((resolve, reject) => {
-    console.log("errorInterception");
-    console.log(data);
+    console.log("错误拦截器");
 
-    if (!data) {
-      err("空数据");
-      resolve(data);
-    } else if (data.code === 200) {
+    const code = data?.code;
+    if (!code || code === 200) {
+      console.log("请求成功");
       resolve(data);
     } else {
-      const code = data.code as number;
-      if (!code) {
-        resolve(data);
-      } else if (code === -460) {
-        err(data.message);
-        reject(data);
-      } else {
-        err(data.message);
-        reject(data);
+      console.log("请求错误");
+      reject(data);
+      if (!data.message) {
+        err("请求错误");
+        return;
       }
+      err(data.message);
     }
   });
 }

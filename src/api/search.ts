@@ -9,8 +9,8 @@ export async function getSearch(query: {
     url: "/search",
     query,
 
-    useClash: true,
-    duration: 1000 * 60,
+    useCache: true,
+    cacheDuration: 1000 * 60,
   });
 }
 export async function getCloudsearch(query: {
@@ -21,7 +21,7 @@ export async function getCloudsearch(query: {
   return await require({
     url: "/cloudsearch",
     query,
-    useClash: true,
-    duration: 1000 * 60,
+    useCache: true,
+    cacheDuration: 1000 * 60,
   });
 }

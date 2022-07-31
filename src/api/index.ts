@@ -12,8 +12,8 @@ export * from "./search";
 export async function getTopList() {
   return await require({
     url: "/toplist",
-    useClash: true,
-    duration: 1000 * 60 * 5,
+    useCache: true,
+    cacheDuration: 1000 * 60 * 5,
   });
 }
 /**
@@ -32,8 +32,8 @@ export async function getPlaylistDetail(query?: {
   const data = await require({
     url: "/playlist/detail",
     query,
-    useClash: true,
-    duration: 1000 * 60 * 5,
+    useCache: true,
+    cacheDuration: 1000 * 60 * 5,
   });
 
   return data.playlist;

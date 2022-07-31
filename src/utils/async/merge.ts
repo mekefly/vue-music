@@ -14,9 +14,10 @@ const asyncMergeData: {
  * @param {() => Promise<E>} callBack
  * @return {*}  {Promise<E>}
  */
-export function asyncMerge<E>(
+export function asyncMerge<E, RECT extends any[]>(
   key: string,
-  callBack: () => Promise<E>
+  callBack: (...rest: RECT) => Promise<E>,
+  ...rest: RECT
 ): Promise<E> {
   return new Promise<E>((resolve, reject) => {
     const calls = asyncMergeData[key];
@@ -24,7 +25,7 @@ export function asyncMerge<E>(
     if (!calls) {
       //此函数是第一次调用
       asyncMergeData[key] = [{ resolve, reject }];
-      callBack()
+      callBack(...rest)
         .then((v) => {
           asyncMergeData[key].forEach((pv) => pv.resolve(v));
           asyncMergeData[key] = undefined as any;

@@ -1,86 +1,214 @@
+/**内存缓存数据对象，更快一点 */
 const cacheDate: any = {};
 
-export async function useAsyncLocalStorageCache<E>(
+/** @type {*} 缓存失效或没有缓存将会抛出此错误 */
+const noCache = Symbol();
+
+/**
+ * 异步缓存
+ *
+ * @export
+ * @template E
+ * @param {string} key 缓存的key名称
+ * @param {() => Promise<E>} genValue 要处理的操作函数返回要缓存的Promise,如果Promise返回拒绝状态将不缓存
+ * @param {number} [duration] 缓存持续时间
+ * @return {*}  {Promise<E>}
+ */
+export async function useAsyncLocalStorageCache<E, REST extends any[]>(
   key: string,
-  genValue: () => Promise<E>,
-  duration?: number
+  genValue: (...rest: REST) => Promise<E>,
+  duration?: number,
+  ...rest: REST
 ): Promise<E> {
-  const value = cacheDate[key];
-  if (checkTime(value)) return value;
-
-  const valueString = localStorage.getItem(key);
-
-  if (!valueString) {
-    return await asyncReCache(key, genValue, duration);
-  }
-
   try {
-    const v: LocalStorageCache<E> = JSON.parse(valueString);
-    if (checkTime(v)) return v.value;
-    return await asyncReCache(key, genValue, duration);
-  } catch (e) {
-    return await asyncReCache(key, genValue, duration);
+    return getCache(key);
+  } catch (error) {
+    return await asyncReCache(key, genValue, duration, ...rest);
   }
 }
-
-function asyncReCache(
+/**
+ * 同步缓存
+ *
+ * @export
+ * @template E
+ * @param {string} key
+ * @param {() => E} genValue 要处理的操作函数返回要缓存的值
+ * @param {number} [duration]
+ * @return {*}  {E}
+ */
+export function useLocalStorageCache<E, REST extends any[]>(
   key: string,
-  genValue: any,
-  duration?: number
-): Promise<any> {
-  return new Promise<any>((resolve, reject) => {
-    genValue()
-      .then((value: any) => {
-        const localStorageCache = createLocalStorageCache(value, duration);
-        cacheDate[key] = localStorageCache;
-        localStorage.setItem(key, JSON.stringify(localStorageCache));
-        resolve(value);
-      })
-      .catch((err: any) => {
-        reject(err);
-      });
-  });
-}
-export function useLocalStorageCache<E>(key: string, genValue: () => E): E {
-  const value = cacheDate[key];
-  if (checkTime(value)) return value;
-
-  const valueString = localStorage.getItem(key);
-  if (!valueString) {
-    return reCache(key, genValue);
-  }
+  genValue: (...rect: REST) => E,
+  duration?: number,
+  ...rest: REST
+): E {
   try {
-    const v = JSON.parse(valueString);
-    if (checkTime(v)) return v.value;
-    return reCache(key, genValue);
-  } catch (e) {
-    return reCache(key, genValue);
+    return getCache(key);
+  } catch (error) {
+    return reCache(key, genValue, duration, ...rest);
   }
 }
-function reCache(key: string, genValue: any, duration?: number) {
-  const value = genValue();
+/**
+ * 异步从新缓存
+ *
+ * @param {string} key
+ * @param {() => Promise<any>} genValue
+ * @param {number} [duration]
+ * @return {*}  {Promise<any>}
+ */
+function asyncReCache<E, REST extends any[]>(
+  key: string,
+  genValue: (...rest: REST) => Promise<E>,
+  duration?: number,
+  ...rest: REST
+): Promise<any> {
+  return genValue(...rest).then(
+    (value: any) => {
+      setCache(key, value, duration);
+      return value;
+    },
+    (e) => e
+  );
+}
+/**
+ * 从新缓存
+ *
+ * @template E
+ * @param {string} key
+ * @param {() => E} genValue
+ * @param {number} [duration]
+ * @return {*}
+ */
+function reCache<E, REST extends any[]>(
+  key: string,
+  genValue: (...rest: REST) => E,
+  duration?: number,
+  ...rest: REST
+) {
+  const value = genValue(...rest);
 
-  const localStorageCache = createLocalStorageCache(value, duration);
-  cacheDate[key] = localStorageCache;
-  localStorage.setItem(key, JSON.stringify(localStorageCache));
   return value;
 }
-function checkTime<E>(localStorageCache: LocalStorageCache<E>) {
-  if (!localStorageCache) return false;
-
-  const nowTime = Date.now();
-  const updateTime = localStorageCache.updateTime;
-  const duration = localStorageCache.duration;
+/**
+ * 获取缓存
+ *
+ * @param {string} key
+ * @return {*}
+ */
+function getCache(key: string) {
   try {
-    return nowTime - updateTime < duration;
+    return getMemoryCache(key);
   } catch (error) {
-    return false;
+    return getLocalStorageCache(key);
   }
 }
-function createLocalStorageCache<T>(
+/**
+ * 设置缓存
+ *
+ * @param {string} key
+ * @param {*} value
+ * @param {number} [duration]
+ */
+function setCache(key: string, value: any, duration?: number) {
+  const localStorageCache = createLocalCache(value, duration);
+  setMemoryCache(key, localStorageCache);
+  setLocalStorage(key, localStorageCache);
+}
+/**
+ * 缓存内存缓存，更快
+ *
+ * @param {string} key
+ * @return {*}
+ */
+function getMemoryCache(key: string) {
+  const cache = cacheDate[key];
+
+  checkLocalCache(cache);
+
+  return cache;
+}
+/**
+ * 获取LocationStorage缓存
+ *
+ * @param {string} key
+ * @return {*}
+ */
+function getLocalStorageCache(key: string) {
+  const catchString = getLocalStorageString(key);
+  const cache: LocalCache<any> = JSON.parse(catchString);
+
+  checkLocalCache(cache);
+
+  return cache.value;
+}
+/**
+ * LocalStorage只可以存储文本
+ *
+ * @param {string} key
+ * @return {*}
+ */
+function getLocalStorageString(key: string) {
+  const valueString = localStorage.getItem(key);
+
+  if (!valueString) {
+    throw noCache;
+  }
+  return valueString;
+}
+/**
+ * 设置内存缓存
+ *
+ * @param {string} key
+ * @param {*} value
+ */
+function setMemoryCache(key: string, value: any) {
+  cacheDate[key] = value;
+}
+/**
+ * 设置LocalStorage缓存
+ *
+ * @param {string} key
+ * @param {*} value
+ */
+function setLocalStorage(key: string, value: any) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+/**
+ * 验证本地缓存
+ *
+ * @template E
+ * @param {LocalCache<E>} localCache
+ * @return {*}
+ */
+function checkLocalCache<E>(localCache: LocalCache<E>) {
+  if (!localCache) {
+    throw noCache;
+  }
+
+  const nowTime = Date.now();
+  const updateTime = localCache.updateTime;
+  const duration = localCache.duration;
+
+  try {
+    if (!(nowTime - updateTime < duration)) {
+      throw noCache;
+    }
+  } catch (error) {
+    throw noCache;
+  }
+}
+/**
+ * 创建本地缓存
+ *
+ * @template T
+ * @param {T} value
+ * @param {number} [duration=3600000]
+ * @return {*}  {LocalCache<T>}
+ */
+function createLocalCache<T>(
   value: T,
   duration: number = 3600000 /**= 1000 * 60 * 60 1h */
-): LocalStorageCache<T> {
+): LocalCache<T> {
   return {
     value,
     updateTime: Date.now(),
@@ -88,7 +216,13 @@ function createLocalStorageCache<T>(
   };
 }
 
-interface LocalStorageCache<E> {
+/**
+ * 本地缓存接口
+ *
+ * @interface LocalCache
+ * @template E
+ */
+interface LocalCache<E> {
   value: E;
   //unit ms
   updateTime: number;

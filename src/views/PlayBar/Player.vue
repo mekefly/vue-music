@@ -197,8 +197,14 @@ function durationchangeHandel() {
       @durationchange="durationchangeHandel"
       @timeupdate="timeupdateHandle"
       @canplay="canplayHandle"
+      @play="
+        () => {
+          played = true;
+        }
+      "
       @ended="
         () => {
+          played = false;
           isPlay = false;
           next();
         }
