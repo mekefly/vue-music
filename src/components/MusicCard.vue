@@ -8,7 +8,7 @@ const props = withDefaults(
     limit?: number;
     itemLimit?: number;
   }>(),
-  { limit: 4 }
+  { limit: 3 }
 );
 
 const topList: Ref<any[]> = shallowRef([]);
@@ -17,7 +17,7 @@ getTopList().then((v) => {
 });
 const limitTopList = computed(() => {
   const list = topList.value;
-  if (!props.limit || list?.length <= 4) {
+  if (!props.limit || list?.length <= props.limit) {
     return list;
   }
 

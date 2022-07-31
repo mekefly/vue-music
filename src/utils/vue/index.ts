@@ -1,3 +1,4 @@
+export * from "./refDom";
 import { Ref, ref, UnwrapRef, watch, watchEffect } from "vue";
 
 export function defineGlobalSync<E>(value: E): () => Ref<UnwrapRef<E>> {
