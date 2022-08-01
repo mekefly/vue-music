@@ -3,7 +3,8 @@ const labels = [
   { to: "/", label: "首页", active: true },
   { to: "/topic", label: "榜单" },
   { to: "/search", label: "搜索" },
-  { to: "/mine", label: "我的" },
+  // { to: "/mine", label: "我的" },
+  { to: "/about", label: "关于" },
 ];
 </script>
 
@@ -32,7 +33,7 @@ ul
   padding-bottom: 2px
   width: 100%
   background-color: #fff
-  margin-bottom: 0.5rem
+  margin-bottom: 0.5em
 
   li
     width: 100%
@@ -44,7 +45,7 @@ ul
       align-items: center
 
       width: 100%
-      height: 4em
+      height: 2em
 
       margin: 0px
       padding: 0px

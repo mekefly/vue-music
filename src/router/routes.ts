@@ -22,10 +22,15 @@ const routes: RouterOptions["routes"] = [
         name: "Search",
         component: () => import("../views/Search.vue"),
       },
+      // {
+      //   path: "/mine",
+      //   name: "Mine",
+      //   component: () => import("../views/Mine.vue"),
+      // },
       {
-        path: "/mine",
-        name: "Mine",
-        component: () => import("../views/Mine.vue"),
+        path: "/about",
+        name: "About",
+        component: () => import("../views/About.vue"),
       },
     ],
   },

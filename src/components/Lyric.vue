@@ -90,7 +90,7 @@ watch(activeIndex, () => {
 </script>
 
 <template>
-  <div class="lyric">
+  <div class="lyric" v-if="lyricList.length > 0">
     <p
       class="item"
       v-for="(lrc, index) in lyricList"

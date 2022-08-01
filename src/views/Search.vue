@@ -42,13 +42,13 @@ const songs = computed(() => {
   flex-grow: 1;
 
   input {
-    height: 2rem;
+    height: 2em;
     width: 90%;
-    margin: 1rem 0;
-    padding: 0 1rem;
+    margin: 1em 0;
+    padding: 0 1em;
     box-sizing: border-box;
 
-    border-radius: 2rem;
+    border-radius: 2em;
     outline: none;
     border: none;
     background-color: white;

@@ -9,7 +9,7 @@ const fullScreen = useFullScreen();
 </script>
 
 <template>
-  <div class="holder"></div>
+  <!-- <div class="holder"></div> -->
   <div class="background" :class="{ 'transparent-background': fullScreen }">
     <div class="play-bar" :class="{ 'transparent-background': fullScreen }">
       <i
@@ -32,7 +32,7 @@ const fullScreen = useFullScreen();
         <LoadingBlock v-if="!coverUrl || coverUrl === ''"></LoadingBlock>
       </div>
       <div class="content">
-        <p>{{ songName }}</p>
+        <p class="full-screen-hide hide-height">{{ songName }}</p>
         <input
           type="range"
           name=""
@@ -86,12 +86,19 @@ const fullScreen = useFullScreen();
     .play-bar {
       max-width: 100vw;
       .full-screen-hide {
-        transform: translateY(100%) scale(1, 0);
+        transform: translateY(var(--s)) scale(1, 0);
         width: 0px;
         margin: 0px;
 
-        transition: transform var(--duration3),
-          width var(--duration3) var(--duration2), margin var(--duration3);
+        transition: transform var(--duration3), opacity var(--duration3),
+          width var(--duration3) var(--duration2),
+          height var(--duration3) var(--duration2), margin var(--duration3);
+
+        &.hide-height {
+          display: flex;
+          height: 0px;
+          width: 100%;
+        }
       }
       .full-screen.btn {
         transform: rotate(180deg);
@@ -120,7 +127,8 @@ const fullScreen = useFullScreen();
     transition: max-width 0.5s;
     .full-screen-hide {
       transition: transform var(--duration3) var(--duration2),
-        width var(--duration3), margin var(--duration3);
+        opacity var(--duration3) var(--duration2), width var(--duration3),
+        margin var(--duration3), height var(--duration3);
     }
     .btn {
       --size: calc(var(--s) * 0.6);
@@ -130,6 +138,7 @@ const fullScreen = useFullScreen();
 
       flex-shrink: 0;
       margin: 0 calc(var(--size) / 4);
+
       font-size: var(--size);
       height: var(--size);
       width: var(--size);
@@ -153,9 +162,12 @@ const fullScreen = useFullScreen();
 
     .content {
       flex-grow: 1;
+      padding: 0 1em;
+      box-sizing: border-box;
       p {
         margin: 0;
         font-size: var(--size);
+        height: 1em;
       }
       input {
         display: block;

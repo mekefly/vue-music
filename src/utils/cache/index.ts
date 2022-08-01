@@ -1,3 +1,4 @@
+export * from "./intelligentCleaning";
 /**内存缓存数据对象，更快一点 */
 const cacheDate: any = {};
 
@@ -180,7 +181,7 @@ function setLocalStorage(key: string, value: any) {
  * @param {LocalCache<E>} localCache
  * @return {*}
  */
-function checkLocalCache<E>(localCache: LocalCache<E>) {
+export function checkLocalCache<E>(localCache: LocalCache<E>) {
   if (!localCache) {
     throw noCache;
   }
@@ -214,6 +215,18 @@ function createLocalCache<T>(
     updateTime: Date.now(),
     duration,
   };
+}
+export function isLocalCache(v: any): v is LocalCache<any> {
+  if (typeof v !== "object") {
+    return false;
+  }
+  if (typeof v.updateTime !== "number") {
+    return false;
+  }
+  if (typeof v.duration !== "number") {
+    return false;
+  }
+  return true;
 }
 
 /**

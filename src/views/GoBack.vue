@@ -30,7 +30,7 @@ const route = useRoute();
 
   padding: 0 1em;
   box-sizing: border-box;
-  height: 4em;
+  height: 3em;
   flex-shrink: 0;
 
   background-color: white;
