@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import { getSongDetail } from "../../api";
-import usePlayState from "./playState";
-import { play } from "./playState";
+import { getSongDetail } from "../api";
+import usePlayState from "../state/playState";
+import { play } from "../state/playState";
 
 import { onClickOutside } from "@vueuse/core";
-import Vip from "../../components/Vip.vue";
+import Vip from "./Vip.vue";
 const { playList, playIndex, playListHide, idOfPlaying } = usePlayState();
 
 const playListDom = ref(null);

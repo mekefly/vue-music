@@ -1,4 +1,5 @@
 body {
+  --max-width: 1024px;
   margin: 0;
   padding: 0;
   min-width: 320px;
@@ -7,6 +8,9 @@ body {
   background-color: #f1f2f6;
 }
 #app {
+  display: flex;
+  justify-content: center;
+
   margin: 0;
   padding: 0;
 }
@@ -44,3 +48,30 @@ h1 {
     background-color: #f9f9f9;
   }
 } */
+
+@media screen and (max-width: 256px) {
+  html {
+    font-size: 3px !important;
+  }
+}
+@media screen and (max-width: 512px) {
+  html {
+    font-size: 10px !important;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  html {
+    font-size: 16px !important;
+  }
+}
+@media screen and (min-width: 2048px) {
+  html {
+    font-size: 24px !important;
+  }
+}
+@media screen and (min-width: 4096px) {
+  html {
+    font-size: 36px !important;
+  }
+}

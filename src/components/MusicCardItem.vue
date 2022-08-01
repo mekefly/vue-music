@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { setBlockTracking, ref, Ref, computed } from "vue";
 import { getPlaylistDetail } from "../api";
-import { play } from "../views/PlayBar/playState";
+import { play } from "../state/playState";
 
 const props = withDefaults(
   defineProps<{

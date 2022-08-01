@@ -1,8 +1,8 @@
 import { inject, InjectionKey, provide, Ref, ref, watch } from "vue";
-import { getSong } from "../../api";
-import { SongDetailType, Song } from "../../api/song/SongDetailType";
-import { defineGlobalSync } from "../../utils";
-import { useLocalStorage } from "../../utils/vue";
+import { getSong } from "../api";
+import { SongDetailType, Song } from "../api/song/SongDetailType";
+import { defineGlobalSync } from "../utils";
+import { useLocalStorage } from "../utils/vue";
 
 // localStorage.clear();
 type IdOfPlaying = null | number | string;

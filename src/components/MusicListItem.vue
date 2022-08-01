@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { play } from "../views/PlayBar/playState";
+import { play } from "../state/playState";
 import Vip from "./Vip.vue";
 
 defineProps<{

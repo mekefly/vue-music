@@ -1,18 +1,9 @@
 <script lang="ts" setup>
-import {
-  computed,
-  ref,
-  shallowRef,
-  Ref,
-  watch,
-  watchEffect,
-  onUnmounted,
-} from "vue";
-import { useRoute } from "vue-router";
-import { getSongDetail, getSongUrlById } from "../../api";
-import PlayButton from "../../components/PlayButton.vue";
-import Lyric from "../../components/Lyric.vue";
-import usePlayState, { useFullScreen, next } from "./playState";
+import { computed, ref, shallowRef, Ref, watch, watchEffect } from "vue";
+import { getSongDetail, getSongUrlById } from "../api";
+import PlayButton from "./PlayButton.vue";
+import Lyric from "./Lyric.vue";
+import usePlayState, { useFullScreen, next } from "../state/playState";
 
 const {
   currentTime,
@@ -150,67 +141,75 @@ function durationchangeHandel() {
 </script>
 
 <template>
-  <div
-    class="player"
-    :class="{ 'full-screen': fullScreen, ['is-play']: played }"
-  >
-    <div class="bg-container">
-      <div
-        class="background"
-        :style="{ backgroundImage: `url(${songDetailData?.al?.picUrl ?? ''})` }"
-      ></div>
-    </div>
-    <div class="header">
-      <i
-        class="fa-solid fa-angle-left"
-        @click="
-          () => {
-            fullScreen = false;
-          }
-        "
-      ></i>
-      <span>{{ songDetailData?.name ?? "音乐" }}</span>
-      <span></span>
-    </div>
-
-    <div class="img">
-      <div>
+  <div>
+    <div
+      class="player"
+      :class="{ 'full-screen': fullScreen, ['is-play']: played }"
+    >
+      <div class="bg-container">
         <div
+          class="background"
+          :style="{
+            backgroundImage: `url(${songDetailData?.al?.picUrl ?? ''})`,
+          }"
+        ></div>
+      </div>
+      <div class="header">
+        <i
+          class="fa-solid fa-angle-left"
           @click="
             () => {
-              isPlay = !isPlay;
+              fullScreen = false;
             }
           "
-          class="cover"
-        >
-          <img :src="songDetailData?.al?.picUrl ?? ''" alt="" />
+        ></i>
+        <span>{{ songDetailData?.name ?? "音乐" }}</span>
+        <span></span>
+      </div>
+      <div class="content">
+        <div class="long-play">
+          <div class="img">
+            <div>
+              <div
+                @click="
+                  () => {
+                    isPlay = !isPlay;
+                  }
+                "
+                class="cover"
+              >
+                <img :src="songDetailData?.al?.picUrl ?? ''" alt="" />
+              </div>
+            </div>
+
+            <PlayButton class="btn" v-model:value="isPlay"></PlayButton>
+          </div>
         </div>
+
+        <Lyric class="lyric" :time="currentTime" :id="idOfPlaying"></Lyric>
       </div>
 
-      <PlayButton class="btn" v-model:value="isPlay"></PlayButton>
+      <audio
+        :src="url"
+        :ref="(el) => (audioDom = el as any)"
+        autoplay
+        @durationchange="durationchangeHandel"
+        @timeupdate="timeupdateHandle"
+        @canplay="canplayHandle"
+        @play="
+          () => {
+            played = true;
+          }
+        "
+        @ended="
+          () => {
+            played = false;
+            isPlay = false;
+            next();
+          }
+        "
+      ></audio>
     </div>
-
-    <audio
-      :src="url"
-      :ref="(el) => (audioDom = el as any)"
-      autoplay
-      @durationchange="durationchangeHandel"
-      @timeupdate="timeupdateHandle"
-      @canplay="canplayHandle"
-      @play="
-        () => {
-          played = true;
-        }
-      "
-      @ended="
-        () => {
-          played = false;
-          isPlay = false;
-          next();
-        }
-      "
-    ></audio>
-    <Lyric class="lyric" :time="currentTime" :id="idOfPlaying"></Lyric>
   </div>
 </template>
 
@@ -279,47 +278,71 @@ function durationchangeHandel() {
     font-size: 1.5rem;
     font-weight: bold;
   }
-  .img {
-    position: relative;
-
+  .content {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    margin: 2.5rem 0;
 
-    > div {
-      border-radius: 50%;
-      box-shadow: rgba(255, 255, 255, 0.12) 0px 2px 4px 0px,
-        rgba(255, 255, 255, 0.32) 0px 2px 16px 0px;
-    }
-    .cover {
-      height: 20rem;
-      width: 20rem;
-
-      overflow: hidden;
-      border-radius: 50%;
-
-      border: 3rem solid #292e49;
-      box-sizing: border-box;
-
-      img {
-        height: 100%;
-        width: 100%;
-
-        object-fit: cover;
-        object-position: center;
-      }
-    }
-    .btn {
-      position: absolute;
-      --color: #fff;
-      --size: 4.2rem;
-    }
-  }
-  .lyric {
     flex-grow: 1;
     flex-shrink: 1;
-    margin: 3rem 0;
+    height: 0px;
+    padding: 2rem;
+    padding-bottom: 4rem;
+
+    .long-play {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      flex-shrink: 0;
+      .img {
+        position: relative;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        min-width: 50vw;
+
+        margin: 2.5rem 0;
+        flex-shrink: 0;
+
+        > div {
+          border-radius: 50%;
+          box-shadow: rgba(255, 255, 255, 0.12) 0px 2px 4px 0px,
+            rgba(255, 255, 255, 0.32) 0px 2px 16px 0px;
+        }
+        .cover {
+          height: 20rem;
+          width: 20rem;
+
+          overflow: hidden;
+          border-radius: 50%;
+
+          border: 3rem solid #292e49;
+          box-sizing: border-box;
+
+          img {
+            height: 100%;
+            width: 100%;
+
+            object-fit: cover;
+            object-position: center;
+          }
+        }
+        .btn {
+          position: absolute;
+          --color: #fff;
+          --size: 4.2rem;
+        }
+      }
+    }
+    .lyric {
+      flex-grow: 1;
+      flex-shrink: 1;
+
+      height: auto;
+    }
   }
 }
 .player.is-play .cover {
@@ -332,6 +355,14 @@ function durationchangeHandel() {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+@media screen and (min-width: 1024px) {
+  .player {
+    .content {
+      font-size: 2em;
+      flex-direction: row;
+    }
   }
 }
 </style>
