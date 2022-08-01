@@ -12,7 +12,7 @@ const playState = {
   isPlay: useLocalStorage("isPlay", false),
   currentTime: ref(0),
   duration: ref(0),
-  playList: useLocalStorage("playList+33343", [] as Array<Song>),
+  playList: useLocalStorage("playList", [] as Array<Song>),
   playIndex: useLocalStorage("playIndex", 0 as number),
   playListHide: ref(true),
   coverUrl: ref("#"),

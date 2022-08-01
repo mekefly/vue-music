@@ -93,13 +93,15 @@ function deleteCurrent() {
 }
 .play-list {
   position: fixed;
-  left: 0;
+  // left: 0;
   bottom: 0px;
 
   display: flex;
   flex-direction: column;
 
   width: 100%;
+  max-width: var(--max-width);
+  min-height: 61.8%;
 
   max-height: 100vh;
   background-color: white;
@@ -125,8 +127,8 @@ function deleteCurrent() {
     background-color: #ddd;
     .right {
       i {
-        margin-left: 0.5rem;
-        font-size: 1.2rem;
+        margin-left: 1rem;
+        font-size: 1.4rem;
       }
 
       .delete {
@@ -140,6 +142,7 @@ function deleteCurrent() {
   .content {
     flex-grow: 1;
     overflow-y: auto;
+
     .item {
       padding: 0.5rem 0.5rem;
       border-bottom: 1px solid #ddd;

@@ -313,13 +313,14 @@ function durationchangeHandel() {
             rgba(255, 255, 255, 0.32) 0px 2px 16px 0px;
         }
         .cover {
-          height: 20rem;
-          width: 20rem;
+          --size: 10rem;
+          height: var(--size);
+          width: var(--size);
 
           overflow: hidden;
           border-radius: 50%;
 
-          border: 3rem solid #292e49;
+          border: calc(var(--size) / 3 / 2) solid #292e49;
           box-sizing: border-box;
 
           img {
@@ -333,7 +334,7 @@ function durationchangeHandel() {
         .btn {
           position: absolute;
           --color: #fff;
-          --size: 4.2rem;
+          --size: 2.1rem;
         }
       }
     }
@@ -357,12 +358,7 @@ function durationchangeHandel() {
     transform: rotate(360deg);
   }
 }
-@media screen and (min-width: 1024px) {
-  .player {
-    .content {
-      font-size: 2em;
-      flex-direction: row;
-    }
-  }
+.horizontal-screen .content {
+  flex-direction: row;
 }
 </style>

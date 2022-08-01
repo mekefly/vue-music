@@ -1,5 +1,11 @@
 body {
   --max-width: 1024px;
+  --duration1: 128ms;
+  --duration2: 256ms;
+  --duration3: 512ms;
+  --duration4: 1024ms;
+  --duration5: 2048ms;
+
   margin: 0;
   padding: 0;
   min-width: 320px;
@@ -23,15 +29,18 @@ h1 {
   display: none;
 }
 *::-webkit-scrollbar {
+  position: fixed;
   width: 8px;
   height: 8px;
 }
 
 *::-webkit-scrollbar-button {
+  position: fixed;
   display: none;
 }
 
 *::-webkit-scrollbar-thumb {
+  position: fixed;
   background-color: rgb(206, 206, 212);
   border-radius: 10px;
 }
@@ -48,30 +57,3 @@ h1 {
     background-color: #f9f9f9;
   }
 } */
-
-@media screen and (max-width: 256px) {
-  html {
-    font-size: 3px !important;
-  }
-}
-@media screen and (max-width: 512px) {
-  html {
-    font-size: 10px !important;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  html {
-    font-size: 16px !important;
-  }
-}
-@media screen and (min-width: 2048px) {
-  html {
-    font-size: 24px !important;
-  }
-}
-@media screen and (min-width: 4096px) {
-  html {
-    font-size: 36px !important;
-  }
-}

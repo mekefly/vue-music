@@ -118,6 +118,8 @@ watch(activeIndex, () => {
     transition-property: transform, font-size, font-weight, color, text-shadow;
     padding: 0 3rem;
     box-sizing: border-box;
+    font-size: 2em;
+    text-align: center;
 
     &.active {
       transform: scale(1.1);
