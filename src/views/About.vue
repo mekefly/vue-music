@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 import RowButton from "../components/RowButton.vue";
-import { intelligentCleaning } from "../utils/cache/intelligentCleaning";
+import {
+  intelligentCleaning,
+  clearMemoryCache,
+  getMemoryCacheLength,
+} from "../utils/cache";
 const localStorage = ref(window.localStorage);
 const len = computed(() => {
   return localStorage.value.length;
@@ -39,6 +43,17 @@ function intelligentCleaningHandle() {
   updateSize();
   alert("清理完成");
 }
+const memoryCacheLength = ref(0);
+function updateMemoryCacheLengthHandle() {
+  memoryCacheLength.value = getMemoryCacheLength();
+}
+onActivated(updateMemoryCacheLengthHandle);
+onMounted(updateMemoryCacheLengthHandle);
+function clearMemoryCacheHandle() {
+  clearMemoryCache();
+  updateMemoryCacheLengthHandle();
+  alert("清理完毕");
+}
 </script>
 
 <template>
@@ -63,6 +78,11 @@ function intelligentCleaningHandle() {
   <RowButton
     :value="`智能清理缓存(清理已过期的)`"
     @click="intelligentCleaningHandle"
+  ></RowButton>
+  <RowButton
+    :value="`清空内存缓存(${memoryCacheLength})`"
+    @click="clearMemoryCacheHandle"
+    @mouseenter="updateMemoryCacheLengthHandle"
   ></RowButton>
 </template>
 

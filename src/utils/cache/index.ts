@@ -1,6 +1,12 @@
 export * from "./intelligentCleaning";
 /**内存缓存数据对象，更快一点 */
-const cacheDate: any = {};
+let memoryCacheDate: { [key: string]: any } = {};
+export function getMemoryCacheLength() {
+  return Object.keys(memoryCacheDate).length;
+}
+export function clearMemoryCache() {
+  memoryCacheDate = {} as any;
+}
 
 /** @type {*} 缓存失效或没有缓存将会抛出此错误 */
 const noCache = Symbol();
@@ -100,7 +106,9 @@ function getCache(key: string) {
   try {
     return getMemoryCache(key);
   } catch (error) {
-    return getLocalStorageCache(key);
+    const cache = getLocalStorageCache(key);
+
+    return cache;
   }
 }
 /**
@@ -122,7 +130,7 @@ function setCache(key: string, value: any, duration?: number) {
  * @return {*}
  */
 function getMemoryCache(key: string) {
-  const cache = cacheDate[key];
+  const cache = memoryCacheDate[key];
 
   checkLocalCache(cache);
 
@@ -139,6 +147,8 @@ function getLocalStorageCache(key: string) {
   const cache: LocalCache<any> = JSON.parse(catchString);
 
   checkLocalCache(cache);
+
+  setMemoryCache(key, cache);
 
   return cache.value;
 }
@@ -163,7 +173,7 @@ function getLocalStorageString(key: string) {
  * @param {*} value
  */
 function setMemoryCache(key: string, value: any) {
-  cacheDate[key] = value;
+  memoryCacheDate[key] = value;
 }
 /**
  * 设置LocalStorage缓存

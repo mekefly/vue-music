@@ -110,10 +110,8 @@ function errorInterception(data: any) {
 
     const code = data?.code;
     if (!code || code === 200) {
-      console.log("请求成功");
       resolve(data);
     } else {
-      console.log("请求错误");
       reject(data);
       if (!data.message) {
         err("请求错误");
