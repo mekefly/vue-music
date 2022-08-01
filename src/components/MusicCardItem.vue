@@ -68,9 +68,11 @@ const limitTracks = computed(() => {
     justify-content: space-between;
 
     padding: 0 1rem;
-    height: 4rem;
+
     box-sizing: border-box;
+    font-size: 2em;
     color: #333;
+    font-weight: bold;
     a {
       text-decoration: none;
       color: #ddd;

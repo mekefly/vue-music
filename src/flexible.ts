@@ -4,7 +4,7 @@ const dpr = window.devicePixelRatio || 1;
 // adjust body font size
 function setBodyFontSize() {
   if (document.body) {
-    document.body.style.fontSize = dpr * 12 + "px";
+    document.body.style.fontSize = dpr * 10 + "px";
   } else {
     document.addEventListener("DOMContentLoaded", setBodyFontSize);
   }

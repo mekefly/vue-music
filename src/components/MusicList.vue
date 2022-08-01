@@ -35,5 +35,6 @@ const limitTracks = computed(() => {
 <style scoped lang="scss">
 .list {
   overflow-y: auto;
+  width: 100%;
 }
 </style>

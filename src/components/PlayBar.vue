@@ -9,6 +9,7 @@ const fullScreen = useFullScreen();
 </script>
 
 <template>
+  <div class="holder"></div>
   <div class="background" :class="{ 'transparent-background': fullScreen }">
     <div class="play-bar" :class="{ 'transparent-background': fullScreen }">
       <i
@@ -56,7 +57,13 @@ const fullScreen = useFullScreen();
 </template>
 
 <style scoped lang="scss">
+.holder {
+  --s: 64px;
+  height: var(--s);
+  width: 100%;
+}
 .background {
+  --s: 64px;
   position: fixed;
   bottom: 0px;
 
@@ -64,6 +71,7 @@ const fullScreen = useFullScreen();
   justify-content: center;
 
   width: 100%;
+  height: var(--s);
 
   background-color: white;
 
@@ -99,9 +107,7 @@ const fullScreen = useFullScreen();
     }
   }
   .play-bar {
-    --s: 3rem;
     display: flex;
-    justify-items: center;
     align-items: center;
 
     height: var(--s);
@@ -109,7 +115,7 @@ const fullScreen = useFullScreen();
 
     max-width: var(--max-width);
 
-    padding: 0 1rem;
+    padding: 0 1em;
     box-sizing: border-box;
     transition: max-width 0.5s;
     .full-screen-hide {
@@ -118,7 +124,9 @@ const fullScreen = useFullScreen();
     }
     .btn {
       --size: calc(var(--s) * 0.6);
-      display: block;
+      display: flex;
+      justify-content: center;
+      align-content: center;
 
       flex-shrink: 0;
       margin: 0 calc(var(--size) / 4);
@@ -130,7 +138,6 @@ const fullScreen = useFullScreen();
       --size: calc(var(--s) * 0.6);
     }
     .btn.full-screen {
-      font-size: 2rem;
       transition: transform 0.5s;
       transition-property: transform, color;
     }

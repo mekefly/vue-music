@@ -28,13 +28,13 @@ const route = useRoute();
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 1rem;
+  padding: 0 1em;
   box-sizing: border-box;
-  height: 4rem;
+  height: 4em;
   flex-shrink: 0;
 
   background-color: white;
-  font-size: 1.5em;
+  font-size: 2em;
 
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;

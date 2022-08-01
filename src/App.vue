@@ -22,13 +22,21 @@ const fullScreen = useFullScreen();
 
 <style scoped lang="scss">
 .app {
+  position: absolute;
+  left: 50%;
+
   display: flex;
   flex-direction: column;
 
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   max-width: var(--max-width);
+  flex-grow: 1;
 
   z-index: -1;
+  transform: translateX(-50%);
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   &.full-screen {
     overflow: hidden;
   }

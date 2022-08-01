@@ -93,7 +93,6 @@ function deleteCurrent() {
 }
 .play-list {
   position: fixed;
-  // left: 0;
   bottom: 0px;
 
   display: flex;
@@ -101,12 +100,12 @@ function deleteCurrent() {
 
   width: 100%;
   max-width: var(--max-width);
-  min-height: 61.8%;
-
+  min-height: 30vh;
   max-height: 100vh;
+
   background-color: white;
   overflow: hidden;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 2em 2em 0 0;
 
   transition: 0.5s;
   transition-property: transform;
@@ -119,16 +118,17 @@ function deleteCurrent() {
     align-items: center;
     flex-shrink: 0;
 
-    height: 3rem;
-    padding: 0 1rem;
+    height: 3em;
+    padding: 0 1em;
     box-sizing: border-box;
     flex-shrink: 0;
 
     background-color: #ddd;
+
+    font-size: 2em;
     .right {
       i {
-        margin-left: 1rem;
-        font-size: 1.4rem;
+        margin-left: 1em;
       }
 
       .delete {
@@ -144,8 +144,11 @@ function deleteCurrent() {
     overflow-y: auto;
 
     .item {
-      padding: 0.5rem 0.5rem;
+      padding: 1em 1em;
+
       border-bottom: 1px solid #ddd;
+
+      font-size: 1.5em;
 
       transition: 0.5s;
       transition-property: background-color;

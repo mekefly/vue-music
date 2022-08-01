@@ -41,6 +41,10 @@ defineProps<{
 <style scoped lang="scss">
 .item {
   display: flex;
+  width: 100%;
+
+  border-bottom: 1px solid #ddd;
+
   &:active {
     background-color: #ddd;
   }
@@ -49,7 +53,7 @@ defineProps<{
     align-items: center;
     justify-content: center;
 
-    width: 4rem;
+    width: 64px;
   }
   &.top-highlight:nth-child(1) .left,
   &.top-highlight:nth-child(2) .left,
@@ -58,10 +62,9 @@ defineProps<{
     font-size: 2em;
   }
   .right {
-    padding: 1rem 1rem;
+    padding: 1em 1em;
     box-sizing: border-box;
 
-    border-bottom: 1px solid #ddd;
     > .name {
       display: flex;
       align-items: center;
