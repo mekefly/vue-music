@@ -10,14 +10,41 @@ export function intelligentCleaning() {
     if (!key) {
       continue;
     }
-    const cache: any = localStorage.getItem(key);
+
+    const cacheString = localStorage.getItem(key);
+    if (!cacheString) {
+      continue;
+    }
+    const cache: any = JSON.parse(cacheString);
     if (!isLocalCache(cache)) {
       continue;
     }
+
     try {
       checkLocalCache(cache);
     } catch (err) {
       localStorage.removeItem(key);
     }
+  }
+}
+export function clearCache() {
+  const localStorage = window.localStorage;
+  const len = localStorage.length;
+
+  for (let i = 0; i < len; i++) {
+    const key = localStorage.key(i);
+    if (!key) {
+      continue;
+    }
+    const cacheString = localStorage.getItem(key);
+    if (!cacheString) {
+      continue;
+    }
+    const cache: any = JSON.parse(cacheString);
+
+    if (!isLocalCache(cache)) {
+      continue;
+    }
+    localStorage.removeItem(key);
   }
 }

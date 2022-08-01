@@ -31,15 +31,30 @@ let isMousedown = false;
 //按下鼠标时记录一个除始状态
 let mousedownPageX = 0;
 function mousedown(e: MouseEvent) {
+  console.log(e);
+
+  down(e.pageX);
+}
+function touchdown(e: TouchEvent) {
+  down(e.targetTouches[0].pageX);
+}
+function down(pageX: number) {
   isMousedown = true;
-  mousedownPageX = e.pageX;
+  mousedownPageX = pageX;
   screenDom.value?.classList.add("mousedown");
 }
 
 useEventListener(document, "mouseup", mouseup);
+useEventListener(document, "touchend", touchup);
 function mouseup(e: MouseEvent) {
-  //鼠标弹起时标准更新
-  stdUpdate(e);
+  up(e.pageX);
+}
+function touchup(e: TouchEvent) {
+  up(e.changedTouches[0].pageX);
+}
+
+function up(pageX: number) {
+  stdUpdate(pageX);
   isMousedown = false;
   screenDom.value?.classList.remove("mousedown");
 }
@@ -60,9 +75,9 @@ setInterval(() => {
  * 这个更新会自动对齐
  * @param {*} e
  */
-function stdUpdate(e: MouseEvent) {
+function stdUpdate(pageX: number) {
   if (isMousedown) {
-    const left = getLeft(e.pageX);
+    const left = getLeft(pageX);
     //当松开手指才会更新这个位置按住的时候只更新了页面的显示，没有更新它，
     //如果您需要页面显示渲染更新的一个index可以使用
     activeIndex = getActiveIndex(left);
@@ -85,10 +100,13 @@ function resize() {
 }
 
 //移动
-useEventListener(document, "mousemove", update);
-function update(e: MouseEvent) {
+useEventListener(document, "mousemove", (e) => update(e.pageX));
+useEventListener(document, "touchmove", (e) =>
+  update(e.targetTouches[0].pageX)
+);
+function update(pageX: number) {
   if (isMousedown) {
-    const left = getLeft(e.pageX);
+    const left = getLeft(pageX);
     const index = getActiveIndex(left);
     render(left, index);
   }
@@ -133,10 +151,22 @@ function getScreenWidth() {
 function getScreenRect() {
   return screenRect;
 }
+
+function dragDetection(e: MouseEvent) {
+  if (Math.abs(e.pageX - mousedownPageX) > 10) {
+    e.preventDefault();
+  }
+}
 </script>
 
 <template>
-  <div class="screen" draggable="false" ref="screenDom" @mousedown="mousedown">
+  <div
+    class="screen"
+    draggable="false"
+    ref="screenDom"
+    @mousedown="mousedown"
+    @touchstart="touchdown"
+  >
     <div class="body" draggable="false">
       <div class="slider" ref="sliderDom" draggable="false">
         <div class="item" v-for="banner in banners" draggable="false">
@@ -145,13 +175,7 @@ function getScreenRect() {
               :src="banner.pic"
               :alt="banner.typeTitle"
               draggable="false"
-              @click="
-                (e:MouseEvent) => {
-                  if (Math.abs(e.pageX - mousedownPageX)>10) {
-                    e.preventDefault();
-                  }
-                }
-              "
+              @click="dragDetection"
             />
           </a>
         </div>

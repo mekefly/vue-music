@@ -12,11 +12,15 @@ const props = withDefaults(
 );
 
 const topList: Ref<any[]> = shallowRef([]);
+
 getTopList().then((v) => {
   topList.value = v.list;
 });
 const limitTopList = computed(() => {
   const list = topList.value;
+  if (!list) {
+    return [];
+  }
   if (!props.limit || list?.length <= props.limit) {
     return list;
   }

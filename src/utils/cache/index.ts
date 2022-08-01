@@ -134,7 +134,7 @@ function getMemoryCache(key: string) {
 
   checkLocalCache(cache);
 
-  return cache;
+  return cache.value;
 }
 /**
  * 获取LocationStorage缓存

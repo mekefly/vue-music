@@ -1,15 +1,18 @@
 <script lang="ts" setup>
-import { computed, onActivated, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, onUpdated, ref } from "vue";
 import RowButton from "../components/RowButton.vue";
+import { clearCache } from "../utils/cache/intelligentCleaning";
 import {
   intelligentCleaning,
   clearMemoryCache,
   getMemoryCacheLength,
 } from "../utils/cache";
 const localStorage = ref(window.localStorage);
-const len = computed(() => {
-  return localStorage.value.length;
-});
+const len = ref(0);
+function updateLen() {
+  len.value = localStorage.value.length;
+}
+onActivated(updateLen);
 const size = ref(0);
 function updateSize() {
   let s = 0;
@@ -29,13 +32,13 @@ function updateSize() {
 
   size.value = s;
 }
-updateSize();
-
+onActivated(updateSize);
 function clearCacheHandle() {
   const r = confirm("您确认要清除所有缓存吗");
   if (r == true) {
-    localStorage.value.clear();
+    clearCache();
     updateSize();
+    updateLen();
   }
 }
 function intelligentCleaningHandle() {
