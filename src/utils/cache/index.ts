@@ -227,6 +227,9 @@ function createLocalCache<T>(
   };
 }
 export function isLocalCache(v: any): v is LocalCache<any> {
+  if (!v) {
+    return false;
+  }
   if (typeof v !== "object") {
     return false;
   }

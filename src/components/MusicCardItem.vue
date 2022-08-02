@@ -67,7 +67,7 @@ const limitTracks = computed(() => {
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 1rem;
+    padding: 0 1em;
 
     box-sizing: border-box;
     font-size: 2em;
@@ -95,13 +95,13 @@ const limitTracks = computed(() => {
         }
       }
       .name {
-        margin: 1rem 0;
+        margin: 0.5em 0;
         font-weight: bold;
       }
       .author {
         color: #777;
 
-        margin: 1rem 0;
+        margin: 1em 0;
       }
     }
   }

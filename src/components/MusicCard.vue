@@ -39,8 +39,11 @@ const limitTopList = computed(() => {
   ></MusicCardItem>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .music-list-view {
-  margin-bottom: 1rem;
+  margin-bottom: 1em;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>
