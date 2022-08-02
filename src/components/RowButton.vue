@@ -38,6 +38,7 @@ button {
   background-color: white;
   border: none;
   outline: none;
+  width: 100%;
   margin-bottom: 1px;
   padding: 1em 1em;
 
