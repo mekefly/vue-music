@@ -106,15 +106,13 @@ function toRequest(fullUrl: string) {
  */
 function errorInterception(data: any) {
   return new Promise<any>((resolve, reject) => {
-    console.log("错误拦截器");
-
     const code = data?.code;
     if (!code || code === 200) {
       resolve(data);
     } else {
       reject(data);
       if (!data.message) {
-        err("请求错误");
+        err("错误拦截器，请求错误");
         return;
       }
       err(data.message);

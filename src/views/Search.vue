@@ -1,23 +1,21 @@
 <script lang="ts" setup>
 import { ref, Ref, computed } from "vue";
-import { useRoute } from "vue-router";
 import MusicList from "../components/MusicList.vue";
-import { getSearch, getCloudsearch } from "../api/index";
+import { getCloudsearch } from "../api/index";
 import LoadingBlock from "../components/LoadingBlock.vue";
 
-const playList: Ref<any> = ref({});
+const playList: Ref<any> = ref(null);
 
-const route = useRoute();
 const value = ref("");
-const isEnter = ref(false);
-function enter(e: any) {
-  if (e.keyCode === 13) {
-    isEnter.value = true;
 
-    getCloudsearch({ keywords: value.value }).then((v) => {
-      isEnter.value = false;
-      playList.value = v;
-    });
+const isLoading = ref(false);
+const searched = ref(false);
+async function enter(e: any) {
+  if (e.keyCode === 13) {
+    isLoading.value = true;
+    playList.value = await getCloudsearch({ keywords: value.value });
+    isLoading.value = false;
+    searched.value = true;
   }
 }
 const songs = computed(() => {
@@ -28,8 +26,8 @@ const songs = computed(() => {
 <template>
   <div class="search-page">
     <input type="text" v-model="value" @keyup="enter" />
-    <LoadingBlock v-if="isEnter"></LoadingBlock>
-    <h3 class="" v-if="songs.length === 0">没有任何数据</h3>
+    <LoadingBlock v-if="isLoading"></LoadingBlock>
+    <h3 class="" v-if="searched && songs.length === 0">没有任何数据</h3>
     <MusicList class="music-list" :tracks="songs"></MusicList>
   </div>
 </template>

@@ -1,20 +1,32 @@
 <script setup lang="ts">
+import { Suspense } from "vue";
 import { useFullScreen } from "./state/playState";
 import Player from "./components/Player.vue";
 import PlayList from "./components/PlayList.vue";
 import PlayBar from "./components/PlayBar.vue";
+import LoadingBlock from "./components/LoadingBlock.vue";
+import { usePreventIncompleteLoading } from "./utils";
 
 const fullScreen = useFullScreen();
+
+const { keepAliveIncludes, makeCache } = usePreventIncompleteLoading();
 </script>
 
 <template>
-  <div class="app" :class="{ 'full-screen': fullScreen }">
-    <RouterView v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </RouterView>
-  </div>
+  <RouterView v-slot="{ Component }">
+    <KeepAlive :include="keepAliveIncludes">
+      <Suspense timeout="0" @resolve="() => makeCache(Component)">
+        <template #default>
+          <div class="app">
+            <component :is="Component"></component>
+          </div>
+        </template>
+        <template #fallback>
+          <LoadingBlock></LoadingBlock>
+        </template>
+      </Suspense>
+    </KeepAlive>
+  </RouterView>
   <Player></Player>
   <PlayBar></PlayBar>
   <PlayList></PlayList>
@@ -22,9 +34,6 @@ const fullScreen = useFullScreen();
 
 <style scoped lang="scss">
 .app {
-  // position: absolute;
-  // left: 50%;
-
   display: flex;
   flex-direction: column;
 
@@ -34,8 +43,6 @@ const fullScreen = useFullScreen();
   flex-grow: 1;
   flex-shrink: 1;
 
-  // z-index: -1;
-  // transform: translateX(-50%);
   overflow-y: auto;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }

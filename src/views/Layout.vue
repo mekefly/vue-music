@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 import Nav from "../components/Nav.vue";
+import LoadingBlock from "../components/LoadingBlock.vue";
+import { usePreventIncompleteLoading } from "../utils/vue/use";
+
+const { keepAliveIncludes, makeCache } = usePreventIncompleteLoading();
 </script>
 
 <template>
@@ -7,9 +11,14 @@ import Nav from "../components/Nav.vue";
     <Nav class="nav"></Nav>
     <div class="content">
       <RouterView v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
+        <KeepAlive :include="keepAliveIncludes">
+          <Suspense timeout="0" @resolve="() => makeCache(Component)">
+            <component :is="Component"></component>
+            <template #fallback>
+              <LoadingBlock></LoadingBlock>
+            </template>
+          </Suspense>
+        </KeepAlive>
       </RouterView>
     </div>
   </div>

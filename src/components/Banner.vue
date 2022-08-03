@@ -7,10 +7,10 @@ import { BannerType, getBanner, GetBannerReturnType } from "../api/banner";
 const screenDom: Ref<HTMLDivElement | null> = divRef();
 const sliderDom: Ref<HTMLDivElement | null> = divRef();
 
-const bannerData: Ref<GetBannerReturnType | null> = ref(null);
-watchEffect(async () => {
-  bannerData.value = await getBanner(BannerType.ANDROID);
-});
+const bannerData: Ref<GetBannerReturnType | null> = ref(
+  await getBanner(BannerType.ANDROID)
+);
+
 const banners: Ref<GetBannerReturnType["banners"]> = computed(() => {
   const value = bannerData.value;
   if (!value) {

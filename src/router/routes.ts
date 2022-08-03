@@ -1,5 +1,22 @@
+import {
+  h,
+  AsyncComponentLoader,
+  defineAsyncComponent,
+  defineComponent,
+  Suspense,
+  KeepAlive,
+} from "vue";
 import { RouterOptions } from "vue-router";
 import Layout from "../views/Layout.vue";
+import LoadingBlock from "../components/LoadingBlock.vue";
+
+function defLoadingComponent<T>(loader: AsyncComponentLoader<T>) {
+  return async () =>
+    defineAsyncComponent({
+      loader,
+      loadingComponent: LoadingBlock,
+    });
+}
 
 const routes: RouterOptions["routes"] = [
   {
