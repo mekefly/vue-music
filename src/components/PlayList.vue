@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
-import { getSongDetail } from "../api";
+import { ref } from "vue";
 import usePlayState from "../state/playState";
 import { play } from "../state/playState";
-
 import { onClickOutside } from "@vueuse/core";
 import Vip from "./Vip.vue";
+
 const { playList, playIndex, playListHide, idOfPlaying } = usePlayState();
 
 const playListDom = ref(null);
+
 //点击播放列表以外的区域时
 onClickOutside(playListDom, () => {
   playListHide.value = true;
