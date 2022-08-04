@@ -30,9 +30,9 @@ let isMousedown = false;
 
 //按下鼠标时记录一个除始状态
 let mousedownPageX = 0;
+useEventListener(screenDom, "touchstart", touchdown, { passive: true });
+useEventListener(screenDom, "mousedown", mousedown, { passive: true });
 function mousedown(e: MouseEvent) {
-  console.log(e);
-
   down(e.pageX);
 }
 function touchdown(e: TouchEvent) {
@@ -44,8 +44,8 @@ function down(pageX: number) {
   screenDom.value?.classList.add("mousedown");
 }
 
-useEventListener(document, "mouseup", mouseup);
-useEventListener(document, "touchend", touchup);
+useEventListener(document, "mouseup", mouseup, { passive: true });
+useEventListener(document, "touchend", touchup, { passive: true });
 function mouseup(e: MouseEvent) {
   up(e.pageX);
 }
@@ -88,8 +88,10 @@ function stdUpdate(pageX: number) {
 let screenRect: DOMRect | null | undefined = null;
 
 onMounted(resize);
-useEventListener(screenDom.value, "DOMContentLoaded", resize);
-useEventListener(window, "resize", resize);
+useEventListener(screenDom.value, "DOMContentLoaded", resize, {
+  passive: true,
+});
+useEventListener(window, "resize", resize, { passive: true });
 function resize() {
   if (!screenDom.value) {
     return;
@@ -100,9 +102,14 @@ function resize() {
 }
 
 //移动
-useEventListener(document, "mousemove", (e) => update(e.pageX));
-useEventListener(document, "touchmove", (e) =>
-  update(e.targetTouches[0].pageX)
+useEventListener(document, "mousemove", (e) => update(e.pageX), {
+  passive: true,
+});
+useEventListener(
+  document,
+  "touchmove",
+  (e) => update(e.targetTouches[0].pageX),
+  { passive: true }
 );
 function update(pageX: number) {
   if (isMousedown) {
@@ -160,13 +167,7 @@ function dragDetection(e: MouseEvent) {
 </script>
 
 <template>
-  <div
-    class="screen"
-    draggable="false"
-    ref="screenDom"
-    @mousedown="mousedown"
-    @touchstart="touchdown"
-  >
+  <div class="screen" draggable="false" ref="screenDom">
     <div class="body" draggable="false">
       <div class="slider" ref="sliderDom" draggable="false">
         <div class="item" v-for="banner in banners" draggable="false">
