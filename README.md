@@ -28,7 +28,9 @@ or
 
 ## run | 运行
 
-> npm start
+> pnpm start
+or
+> npm run start
 
 ## 更多帮助
 
