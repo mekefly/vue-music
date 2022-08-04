@@ -4,6 +4,10 @@ This project is a music project of Netease cloud music API. Please do not use it
 
 该项目是网易云音乐api的一个音乐工程，请不要用于任何非法用途
 
+![](./doc/image/Snipaste_2022-08-04_14-37-47.png)
+
+![](./doc/image/Snipaste_2022-08-04_14-39-59.png)
+
 ## Quick start | 快速开始
 
 ## Clone | 克隆
