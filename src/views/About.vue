@@ -7,16 +7,25 @@ import {
   clearMemoryCache,
   getMemoryCacheLength,
 } from "../utils/cache";
-const localStorage = ref(window.localStorage);
+const localStorage = window.localStorage;
+
 const len = ref(0);
-function updateLen() {
-  len.value = localStorage.value.length;
-}
+
+//更新localStorage的条数
+onMounted(updateLen);
 onActivated(updateLen);
+function updateLen() {
+  len.value = localStorage.length;
+}
+// 占用空间的变量
 const size = ref(0);
+onMounted(updateSize);
+onActivated(updateSize);
+
+// 更新占用空间
 function updateSize() {
   let s = 0;
-  const storage = localStorage.value;
+  const storage = localStorage;
 
   for (let i = 0; i < len.value; i++) {
     const key = storage.key(i);
@@ -32,11 +41,22 @@ function updateSize() {
 
   size.value = s;
 }
-onActivated(updateSize);
+
+//内存缓存条数
+const memoryCacheLength = ref(0);
+function updateMemoryCacheLengthHandle() {
+  memoryCacheLength.value = getMemoryCacheLength();
+}
+onActivated(updateMemoryCacheLengthHandle);
+onMounted(updateMemoryCacheLengthHandle);
+
+//clear
 function clearCacheHandle() {
   const r = confirm("您确认要清除所有缓存吗");
   if (r == true) {
     clearCache();
+    clearMemoryCacheHandle();
+
     updateSize();
     updateLen();
   }
@@ -46,12 +66,6 @@ function intelligentCleaningHandle() {
   updateSize();
   alert("清理完成");
 }
-const memoryCacheLength = ref(0);
-function updateMemoryCacheLengthHandle() {
-  memoryCacheLength.value = getMemoryCacheLength();
-}
-onActivated(updateMemoryCacheLengthHandle);
-onMounted(updateMemoryCacheLengthHandle);
 function clearMemoryCacheHandle() {
   clearMemoryCache();
   updateMemoryCacheLengthHandle();
