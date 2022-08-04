@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import Layout from "../views/Layout.vue";
 const props = withDefaults(
   defineProps<{
     value?: string;
@@ -8,11 +7,11 @@ const props = withDefaults(
   }>(),
   { value: "按钮", noArrow: false }
 );
+
+//点击事件，检测是否有src有的话就进入对应的页面
 function clickHandle() {
   const src = props.src;
   if (src) {
-    console.log(src);
-
     location.href = src;
   }
 }

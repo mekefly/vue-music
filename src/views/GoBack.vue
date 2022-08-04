@@ -1,10 +1,4 @@
-<script lang="ts" setup>
-import { Directive } from "vue";
-import { useRoute } from "vue-router";
-import { activate_init_profile } from "../../NeteaseCloudMusicApi/interface";
-import { router } from "../router/index";
-const route = useRoute();
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <div class="go-back">
@@ -17,7 +11,7 @@ const route = useRoute();
           }
         "
       ></i>
-      <span>{{ route.params.pageName }}</span>
+      <span>{{ $route.params.pageName }}</span>
       <span></span>
     </div>
     <div class="content">

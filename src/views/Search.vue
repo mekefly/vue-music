@@ -4,12 +4,17 @@ import MusicList from "../components/MusicList.vue";
 import { getCloudsearch } from "../api/index";
 import LoadingBlock from "../components/LoadingBlock.vue";
 
+//搜索请求的返回值
 const playList: Ref<any> = ref(null);
 
+//搜索框中的内容
 const value = ref("");
 
+//是否在加载的状态
 const isLoading = ref(false);
+//是否已经点击了搜索按钮
 const searched = ref(false);
+/** keyup enter */
 async function enter(e: any) {
   if (e.keyCode === 13) {
     isLoading.value = true;
@@ -18,6 +23,7 @@ async function enter(e: any) {
     searched.value = true;
   }
 }
+//歌曲列表
 const songs = computed(() => {
   return playList.value?.result?.songs ?? [];
 });
@@ -25,7 +31,12 @@ const songs = computed(() => {
 
 <template>
   <div class="search-page">
-    <input type="text" v-model="value" @keyup="enter" />
+    <input
+      type="text"
+      v-model="value"
+      @keyup="enter"
+      placeholder="Enter a song name to start the search"
+    />
     <LoadingBlock v-if="isLoading"></LoadingBlock>
     <h3 class="" v-if="searched && songs.length === 0">没有任何数据</h3>
     <MusicList class="music-list" :tracks="songs"></MusicList>

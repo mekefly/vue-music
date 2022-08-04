@@ -17,12 +17,13 @@ const {
   coverUrl,
 } = usePlayState();
 
+//全屏展示播放页面的状态
 const fullScreen = useFullScreen();
 
 //歌曲详情data
 const songDetailData: Ref<any> = shallowRef(null);
 
-//urldata
+//url require data
 const songUrlData: Ref<any> = shallowRef(null);
 watchEffect(() => {
   songDetailData.value = null;
@@ -65,15 +66,11 @@ const url = computed(() => {
 
 //audio标签
 const audioDom: Ref<HTMLAudioElement | null> = ref(null);
+//是否已经播放的状态
 const played = ref(false);
 
 //播放状态更新
 watch(isPlay, updateAudio);
-watch(isPlay, () => {
-  if (!isPlay.value) {
-    played.value = false;
-  }
-});
 
 function updateAudio() {
   const audioValue = audioDom.value;
@@ -87,20 +84,18 @@ function updateAudio() {
   }
 
   if (isPlay.value) {
+    //判断是否已经播放了
     if (audioValue.paused) {
       //尝试播放
       audioValue
         .play()
         .then(() => {
           //播放成功就把状态变为已播放
-          played.value = true;
           console.log("播放成功");
         })
         .catch(function (error) {
-          console.log(error);
-
           console.log("播放失败");
-          played.value = false;
+          console.log(error);
 
           audioValue.pause();
           //播放失败两秒后继续尝试
@@ -108,21 +103,18 @@ function updateAudio() {
         });
     }
   } else {
+    //判断是否已经暂停了
     if (!audioValue.paused) {
       audioValue.pause();
-      played.value = false;
     }
   }
 }
 
-let isStopUpdate = false;
-
 //播放进度更新
 function timeupdateHandle(e: any) {
-  isStopUpdate = true;
   currentTime.value = e.target.currentTime;
-  isStopUpdate = false;
 }
+//当拖动ranger时更新播放位置
 watch(currentTime, () => {
   if (!audioDom.value) {
     return;
@@ -134,7 +126,8 @@ watch(currentTime, () => {
 
   audioDom.value.currentTime = currentTime.value;
 });
-function canplayHandle(this: HTMLAudioElement) {}
+
+//更新播放位置的事件
 function durationchangeHandel() {
   duration.value = audioDom.value?.duration ?? 0;
 }
@@ -195,7 +188,6 @@ function durationchangeHandel() {
         autoplay
         @durationchange="durationchangeHandel"
         @timeupdate="timeupdateHandle"
-        @canplay="canplayHandle"
         @play="
           () => {
             played = true;

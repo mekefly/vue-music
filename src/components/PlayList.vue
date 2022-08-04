@@ -9,9 +9,11 @@ import Vip from "./Vip.vue";
 const { playList, playIndex, playListHide, idOfPlaying } = usePlayState();
 
 const playListDom = ref(null);
+//点击播放列表以外的区域时
 onClickOutside(playListDom, () => {
   playListHide.value = true;
 });
+//删除当前播放的音乐在播放列表中
 function deleteCurrent() {
   playList.value.splice(playIndex.value, 1);
   const len = playList.value.length;

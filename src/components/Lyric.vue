@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, Ref, ref, watch, watchEffect, onMounted } from "vue";
 import { getLyricById } from "../api";
-import { Lyric } from "../api/types";
 
 const props = defineProps<{
   id: number | string | undefined | null;
@@ -9,7 +8,7 @@ const props = defineProps<{
 }>();
 
 /** 歌词请求得到的数据存放点 */
-const LyricData: Ref<Lyric | null> = ref(null);
+const LyricData: Ref<any | null> = ref(null);
 watchEffect(() => {
   LyricData.value = null;
   if (!props.id) {

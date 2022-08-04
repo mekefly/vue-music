@@ -3,6 +3,7 @@ const labels = [
   { to: "/", label: "首页", active: true },
   { to: "/topic", label: "榜单" },
   { to: "/search", label: "搜索" },
+  //api登录会提示环境异常所以没法写
   // { to: "/mine", label: "我的" },
   { to: "/about", label: "关于" },
 ];

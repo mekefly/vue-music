@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { setBlockTracking, ref, Ref, computed } from "vue";
+import { ref, Ref, computed } from "vue";
 import { getPlaylistDetail } from "../api";
 import { play } from "../state/playState";
 
@@ -11,11 +11,10 @@ const props = withDefaults(
   { limit: 6 }
 );
 
-const playList: Ref<any> = ref({});
+const playList: Ref<any> = ref(
+  await getPlaylistDetail({ id: props.topList.id })
+);
 
-getPlaylistDetail({ id: props.topList.id }).then((v) => {
-  playList.value = v;
-});
 const limitTracks = computed(() => {
   const value = playList.value?.tracks;
   if (!value) {
